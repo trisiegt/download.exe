@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>download.exe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="icon" href="downloadexe.png" type="image/png">
+    <style>
+        :root {
+            /* Dark Mode Colors */
+            --background-color: #1a1a1a;
+            --text-color: #f0f0f0;
+            --primary-button-bg: #0366d6;
+            --primary-button-hover-bg: #004080;
+            --link-color: #8ab4f8; /* Lighter blue for dark mode */
+            --placeholder-bg: #2a2a2a; /* Made this darker for the "bump" effect */
+            --placeholder-text: #bbb;
+            --github-button-bg: #444; /* Default GitHub button background, can be textured */
+            --github-button-hover-bg: #666;
+            --section-bg: #222; /* Slightly lighter than body for sections */
+            --code-bg: #333;
+            --code-color: #f8f8f2;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .main-content {
+            max-width: 800px;
+            width: 90%;
+            margin: 0 auto;
+            flex-grow: 1;
+        }
+
+        .top-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px 0;
+        }
+
+        .title-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            background-color: var(--placeholder-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+        }
+
+        .title-section img {
+            height: 48px;
+            margin-right: 15px;
+            object-fit: contain;
+        }
+
+        h1 {
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        h2 {
+            color: var(--text-color);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .download-button {
+            background-color: var(--primary-button-bg);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            margin-bottom: 40px;
+        }
+
+        .download-button:hover {
+            background-color: var(--primary-button-hover-bg);
+        }
+
+        .icon-nav-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between icons/buttons */
+        }
+
+        .github-button {
+            background-color: var(--github-button-bg);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .github-button:hover {
+            background-color: var(--github-button-hover-bg);
+        }
+
+        .github-button img {
+            width: 24px;
+            height: 24px;
+            filter: invert(100%);
+        }
+
+        /* Styling for the Material Symbols icon */
+        .packages-icon-link .material-symbols-outlined {
+            font-size: 30px; /* Increased size */
+            color: white; /* Make the icon white */
+            /* Add pointer cursor to indicate it's clickable */
+            cursor: pointer;
+            /* Optional: Add a slight transition for hover effects */
+            transition: color 0.3s ease, box-shadow 0.3s ease; /* Added transition for box-shadow */
+            /* "Lump" effect using box-shadow */
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); /* Slight shadow for depth */
+        }
+
+        .packages-icon-link .material-symbols-outlined:hover {
+            color: var(--link-color); /* Change color on hover, or match primary-button-bg */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Make the shadow a bit more pronounced on hover */
+        }
+
+
+        /* Filler Space to force scrolling */
+        .filler-space {
+            min-height: 60vh;
+            width: 1px;
+        }
+
+        /* Instructions Section - Initial Hidden State */
+        .instructions-section {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 40px;
+            text-align: left;
+
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Instructions Section - Visible State */
+        .instructions-section.show {
+            opacity: 1;
+            transform: translateX(0);
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .instructions-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .instructions-section ul li {
+            margin-bottom: 15px;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        /* Styling for inline code blocks (the blue text) */
+        .instructions-section ul li code {
+            background-color: var(--code-bg);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        /* Ensure the blue color on strong still applies to text inside code */
+        .instructions-section ul li strong {
+            color: var(--link-color); /* This makes the text blue */
+            font-weight: 600;
+        }
+
+        .instructions-section pre {
+            background-color: var(--code-bg);
+            color: var(--code-color);
+            padding: 15px;
+            border-radius: 5px; 
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.95em;
+            margin-top: 15px;
+            margin-bottom: 25px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .title-section img {
+                height: 40px;
+                margin-right: 10px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .download-button {
+                padding: 12px 24px;
+                font-size: 1em;
+            }
+            .icon-nav-container {
+                top: 10px;
+                right: 10px;
+                gap: 5px;
+            }
+            .github-button {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+            .github-button img {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        .bluetext {
+            color: #00b2f6;
+
+        }
+
+        .short-line {
+                width: 750px;
+                border: none;
+                border-top: 3px solid #FFFFFF;
+                margin-top: 25px;
+                margin-bottom: 25px;
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+
+    </style>
+</head>
+<body>
+
+    <div class="icon-nav-container">
+        <a href="index.html" class="github-button">
+            <span class="material-symbols-outlined">
+                home
+            </span>
+        </a>
+
+        <a href="packages.html" class="github-button">
+            <span class="material-symbols-outlined">
+                package
+            </span>
+        </a>
+
+        <a href="https://github.com/trisiegt" class="github-button">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub Logo">
+            GitHub
+        </a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-content-wrapper">
+            <div class="title-section">
+                <img src="downloadexe.png" alt="download.exe logo">
+                <h1>download.exe</h1>
+            </div>
+
+            <p>A handy tool for downloading packages. Made by <a href='https://github.com/trisiegt'>trisiegt!</a></p>
+            <p>Join the Discord server at <a href="https://discord.gg/V9DdGqtBX2">https://discord.gg/V9DdGqtBX2!</a></p>
+            <a href="https://trisiegt.github.io/cdn/download.exe.zip" class="download-button">Download!</a>
+        </div>
+
+        <div class="filler-space"></div>
+
+        <div class="instructions-section" id="instructionsSection">
+            <h2>How to Use</h2>
+            <p>Once you've downloaded the <code class="bluetext">download.exe</code> tool, open your Command Prompt or PowerShell and navigate to the directory where you saved it. Then, you can use the following commands:</p>
+            <p><span class="github-button">Tip: <br> <span style="color: #FFFF00">I highly recommend running <code class="bluetext">download.exe -r</code> to reset the program's log and config files from development.</span></p></div</span>
+
+            <ul>
+                <li><strong><code>download -pkg &lt;package_name&gt;</code></strong><br>
+                    Downloads the specified package from the online repository. Replace <code>&lt;package_name&gt;</code> with the actual package identifier (e.g., <code>com.justtrisie.schoolTool</code>).
+                    <pre><code>download -pkg com.justtrisie.schoolTool</code></pre>
+                </li>
+                <li><strong><code>download --clear-downloads</code></strong> or <strong><code>download -c</code></strong><br>
+                    Clears all files and subfolders from your configured download directory.
+                    <pre><code>download --clear-downloads</code></pre>
+                </li>
+                <li><strong><code>download --reset-config</code></strong> or <strong><code>download -rc</code></strong><br>
+                    Resets your <code>config.ini</code> file to its default settings. Note that this will delete your current configuration.
+                    <pre><code>download --reset-config</code></pre>
+                </li>
+                <li><strong><code>download --reset</code></strong> or <strong><code>download -r</code></strong><br>
+                    Performs both a clear of the download folder and a reset of your <code>config.ini</code> file.
+                    <pre><code>download --reset</code></pre>
+                </li>
+            </ul>
+            
+
+            <h2>config.ini</h2>
+            <p>The <code>config.ini</code> file is used to configure the settings of <code>download.exe</code>.</p><br>
+            <p>By default, it is as following:</p>
+            <pre><code>
+[Settings]
+DownloadPath = C:\Downloads
+ConsoleForegroundColor = White
+ConsoleBackgroundColor = Black
+LogLevel = Info
+LogFilePath = F:\code\visual studio 2022\source\repos\download\download\bin\x64\Debug\downloader.log
+
+
+; --- Notes on Colors ---
+; Valid Console Colors:
+; Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta, DarkYellow, Gray,
+; DarkGray, Blue, Green, Cyan, Red, Magenta, Yellow, White
+
+            </code>
+            </pre>
+
+            <p><strong>Note:</strong> You can combine commands, but some actions (like resetting config) might cause the program to exit early to apply new settings.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const instructionsSection = document.getElementById('instructionsSection');
+
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top <= (window.innerHeight || document.documentElement.clientHeight) - 50 &&
+                    rect.left <= (window.innerWidth || document.documentElement.clientWidth) &&
+                    rect.bottom >= 0 &&
+                    rect.right >= 0
+                );
+            }
+
+            function handleScroll() {
+                if (isElementInViewport(instructionsSection)) {
+                    instructionsSection.classList.add('show');
+                    window.removeEventListener('scroll', handleScroll);
+                }
+            }
+
+            handleScroll();
+            window.addEventListener('scroll', handleScroll);
+        });
+    </script>
+</body>
+</html>
