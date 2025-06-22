@@ -11,21 +11,25 @@
     <link rel="icon" href="downloadexe.png" type="image/png">
     <style>
         :root {
-            /* Dark Mode Colors */
+            /* Dark Mode Colors - Reused */
             --background-color: #1a1a1a;
             --text-color: #f0f0f0;
             --primary-button-bg: #0366d6;
             --primary-button-hover-bg: #004080;
-            --link-color: #8ab4f8; /* Lighter blue for dark mode */
-            --placeholder-bg: #2a2a2a; /* Made this darker for the "bump" effect */
+            --link-color: #8ab4f8;
+            --placeholder-bg: #2a2a2a;
             --placeholder-text: #bbb;
-            --github-button-bg: #444; /* Default GitHub button background, can be textured */
+            --github-button-bg: #444;
             --github-button-hover-bg: #666;
-            --section-bg: #222; /* Slightly lighter than body for sections */
+            --section-bg: #222;
             --code-bg: #333;
             --code-color: #f8f8f2;
+            --footer-bg: #222; /* Even darker for the footer */
+            --footer-text: #aaa;
         }
 
+
+        /* BODY STYLES - MODIFIED */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--background-color);
@@ -34,16 +38,17 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
             min-height: 100vh;
             text-align: center;
+            width: 100%; /* Ensure body takes full width */
         }
 
+        /* MAIN CONTENT - MODIFIED */
         .main-content {
             max-width: 800px;
             width: 90%;
-            margin: 0 auto;
-            flex-grow: 1;
+            margin: 0 auto; /* Added to center the content */
+            flex-grow: 1; /* Allows main content to take up available space, pushing footer down */
         }
 
         .top-content-wrapper {
@@ -175,8 +180,8 @@
             width: 1px;
         }
 
-        /* Instructions Section - Initial Hidden State */
-        .instructions-section {
+        /* Animations for sections - REVERTED */
+        .instructions-section, .sysreq-section {
             background-color: var(--section-bg);
             border-radius: 8px;
             padding: 30px;
@@ -185,33 +190,50 @@
             text-align: left;
 
             opacity: 0;
-            transform: translateX(-50px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
             visibility: hidden;
             pointer-events: none;
         }
 
-        /* Instructions Section - Visible State */
+        /* Instructions Section (slide from left) - REVERTED */
+        .instructions-section {
+            transform: translateX(-50px); /* Starts slightly off-screen to the left */
+        }
+
         .instructions-section.show {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateX(0); /* Slides into view */
             visibility: visible;
             pointer-events: auto;
         }
 
-        .instructions-section ul {
+        /* System Requirements Section (slide from right) - REVERTED */
+        .sysreq-section {
+            transform: translateX(50px); /* Starts slightly off-screen to the right */
+        }
+
+        .sysreq-section.show {
+            opacity: 1;
+            transform: translateX(0); /* Slides into view */
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .instructions-section ul, .sysreq-section ul {
             list-style: none;
             padding: 0;
         }
 
-        .instructions-section ul li {
+        .instructions-section ul li, .sysreq-section ul li {
             margin-bottom: 15px;
             font-size: 1em;
             line-height: 1.5;
+            position: relative; /* Needed for positioning the copy button */
+            padding-right: 40px; /* Make space for the button */
         }
 
         /* Styling for inline code blocks (the blue text) */
-        .instructions-section ul li code {
+        .instructions-section ul li code, .sysreq-section ul li code {
             background-color: var(--code-bg);
             padding: 3px 6px;
             border-radius: 4px;
@@ -221,12 +243,12 @@
         }
 
         /* Ensure the blue color on strong still applies to text inside code */
-        .instructions-section ul li strong {
+        .instructions-section ul li strong, .sysreq-section ul li strong {
             color: var(--link-color); /* This makes the text blue */
             font-weight: 600;
         }
 
-        .instructions-section pre {
+        .instructions-section pre, .sysreq-section pre {
             background-color: var(--code-bg);
             color: var(--code-color);
             padding: 15px;
@@ -236,6 +258,91 @@
             font-size: 0.95em;
             margin-top: 15px;
             margin-bottom: 25px;
+            position: relative; /* For the copy button inside pre */
+        }
+
+        .bluetext {
+            color: #00b2f6;
+        }
+
+        .short-line {
+            width: 750px;
+            border: none;
+            border-top: 3px solid #FFFFFF;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
+        /* Copy Button Styles */
+        .copy-button {
+            position: absolute;
+            top: 10px; /* Adjust as needed */
+            right: 10px; /* Adjust as needed */
+            background-color: var(--github-button-bg); /* Reusing a defined color */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 8px;
+            cursor: pointer;
+            font-family: 'Poppins', 'Consolas', sans-serif; /* Added Poppins */
+            font-size: 0.8em;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .copy-button:hover {
+            background-color: var(--github-button-hover-bg);
+            transform: translateY(-1px);
+        }
+
+        .copy-button .material-symbols-outlined {
+            font-size: 18px; /* Icon size */
+            color: white;
+            line-height: 1; /* Align icon better */
+        }
+
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        /* Specific positioning for copy button in <li> */
+        .instructions-section ul li .copy-button, .sysreq-section ul li .copy-button {
+            top: 0; /* Align with the top of the li */
+            right: 0; /* Align to the right of the li */
+            padding: 3px 6px; /* Smaller padding for inline */
+            font-size: 0.75em;
+        }
+
+        /* FOOTER STYLES - NO CHANGE FROM PREVIOUS, SHOULD NOW WORK */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 20px;
+            width: 100%; /* Make sure it's 100% width */
+            margin-top: 50px; /* Space above the footer */
+            text-align: center;
+            font-size: 0.9em;
+            border-top: 1px solid #333; /* A subtle separator */
+            box-sizing: border-box; /* Ensure padding is included in width */
+        }
+
+        footer p {
+            margin: 5px 0;
+            line-height: 1.5;
+            font-size: 0.95em; /* Slightly larger than overall footer font for readability */
+        }
+
+        footer a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
 
         /* Responsive adjustments */
@@ -267,23 +374,11 @@
                 width: 20px;
                 height: 20px;
             }
-        }
-
-        .bluetext {
-            color: #00b2f6;
-
-        }
-
-        .short-line {
-                width: 750px;
-                border: none;
-                border-top: 3px solid #FFFFFF;
-                margin-top: 25px;
-                margin-bottom: 25px;
-                margin-left: 15px;
-                margin-right: 15px;
+            footer {
+                padding: 15px;
             }
-
+        }
+        .yellowtext {color:#FFFF00; background-color: #004080;}
     </style>
 </head>
 <body>
@@ -299,6 +394,12 @@
             <span class="material-symbols-outlined">
                 package
             </span>
+        </a>
+
+        <a href="contact.html" class="github-button">
+            <span class="material-symbols-outlined">
+                sms
+                </span>
         </a>
 
         <a href="https://github.com/trisiegt" class="github-button">
@@ -317,6 +418,11 @@
             <p>A handy tool for downloading packages. Made by <a href='https://github.com/trisiegt'>trisiegt!</a></p>
             <p>Join the Discord server at <a href="https://discord.gg/V9DdGqtBX2">https://discord.gg/V9DdGqtBX2!</a></p>
             <a href="https://trisiegt.github.io/cdn/download.exe.zip" class="download-button">Download!</a>
+
+            <p>Scroll down for more info.</p>
+            <span class="material-symbols-outlined">
+                keyboard_arrow_down
+            </span>
         </div>
 
         <div class="filler-space"></div>
@@ -324,32 +430,31 @@
         <div class="instructions-section" id="instructionsSection">
             <h2>How to Use</h2>
             <p>Once you've downloaded the <code class="bluetext">download.exe</code> tool, open your Command Prompt or PowerShell and navigate to the directory where you saved it. Then, you can use the following commands:</p>
-            <p><span class="github-button">Tip: <br> <span style="color: #FFFF00">I highly recommend running <code class="bluetext">download.exe -r</code> to reset the program's log and config files from development.</span></p></div</span>
+            <p class="github-button"><b><u>Tip:</u></b> <br> <span style="color: #FFFF00">I highly recommend running <code class="bluetext">download.exe -r</code> to reset the program's log and config files from development.</span></p>
 
             <ul>
                 <li><strong><code>download -pkg &lt;package_name&gt;</code></strong><br>
                     Downloads the specified package from the online repository. Replace <code>&lt;package_name&gt;</code> with the actual package identifier (e.g., <code>com.justtrisie.schoolTool</code>).
-                    <pre><code>download -pkg com.justtrisie.schoolTool</code></pre>
+                    <pre><code id="code1">download -pkg com.justtrisie.schoolTool</code><button class="copy-button" onclick="copyToClipboard('code1')"><span class="material-symbols-outlined">content_copy</span> Copy</button></pre>
                 </li>
                 <li><strong><code>download --clear-downloads</code></strong> or <strong><code>download -c</code></strong><br>
                     Clears all files and subfolders from your configured download directory.
-                    <pre><code>download --clear-downloads</code></pre>
+                    <pre><code id="code2">download --clear-downloads</code><button class="copy-button" onclick="copyToClipboard('code2')"><span class="material-symbols-outlined">content_copy</span> Copy</button></pre>
                 </li>
-                <li><strong><code>download --reset-config</code></strong> or <strong><code>download -rc</code></strong><br>
+                <li><strong><code>download --reset-config</code></b> or <b><code>download -rc</code></b><br>
                     Resets your <code>config.ini</code> file to its default settings. Note that this will delete your current configuration.
-                    <pre><code>download --reset-config</code></pre>
+                    <pre><code id="code3">download --reset-config</code><button class="copy-button" onclick="copyToClipboard('code3')"><span class="material-symbols-outlined">content_copy</span> Copy</button></pre>
                 </li>
                 <li><strong><code>download --reset</code></strong> or <strong><code>download -r</code></strong><br>
                     Performs both a clear of the download folder and a reset of your <code>config.ini</code> file.
-                    <pre><code>download --reset</code></pre>
+                    <pre><code id="code4">download --reset</code><button class="copy-button" onclick="copyToClipboard('code4')"><span class="material-symbols-outlined">content_copy</span> Copy</button></pre>
                 </li>
             </ul>
             
-
             <h2>config.ini</h2>
             <p>The <code>config.ini</code> file is used to configure the settings of <code>download.exe</code>.</p><br>
             <p>By default, it is as following:</p>
-            <pre><code>
+            <pre><code id="code5">
 [Settings]
 DownloadPath = C:\Downloads
 ConsoleForegroundColor = White
@@ -362,17 +467,60 @@ LogFilePath = F:\code\visual studio 2022\source\repos\download\download\bin\x64\
 ; Valid Console Colors:
 ; Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta, DarkYellow, Gray,
 ; DarkGray, Blue, Green, Cyan, Red, Magenta, Yellow, White
-
-            </code>
-            </pre>
+            </code><button class="copy-button" onclick="copyToClipboard('code5')"><span class="material-symbols-outlined">content_copy</span> Copy</button></pre>
 
             <p><strong>Note:</strong> You can combine commands, but some actions (like resetting config) might cause the program to exit early to apply new settings.</p>
         </div>
+
+        <div class="sysreq-section" id="sysreqSection">
+            <h2>System Requirements</h2>
+            <p>To run <code class="bluetext">download.exe</code> effectively, your system should meet the following specifications:</p>
+            <ul>
+                <li><strong>Operating System:</strong>
+                    <ul>
+                        <li><span class="bluetext">Windows 8.1, 10, or 11</span></li>
+                        <li>*not supported on macOS or Linux*</li>
+                    </ul>
+                </li>
+                <li><strong>.NET Framework:</strong>
+                    <ul>
+                        <li><span class="bluetext">.NET Framework 4.8 or higher</span></li>
+                        <li>(usually included with Windows updates, or available from Microsoft's website)</li>
+                    </ul>
+                </li>
+                <li><strong>Processor:</strong>
+                    <ul>
+                        <li>Any modern 64-bit CPU (not arm64)</li>
+                    </ul>
+                </li>
+                <li><strong>RAM:</strong>
+                    <ul>
+                        <li>Runs on pretty much anything with more than 2GB of RAM.</li>
+                    </ul>
+                </li>
+                <li><strong>Storage:</strong>
+                    <ul>
+                        <li>5 MB free disk space for the application</li>
+                        <li>Additional space for downloaded packages</li>
+                    </ul>
+                </li>
+            </ul>
+        
+            <p>While <code class="bluetext">download.exe</code> is designed to be lightweight, meeting these recommendations will ensure the best experience. :P</p>
+        </div>
+
     </div>
+
+    <footer>
+        <p>&copy; 2025-<span id="currentYear"></span> justTrisie. All rights reserved.</p>
+        <p>Find me on GitHub: <a href="https://github.com/trisiegt" target="_blank">trisiegt</a></p>
+        <p>Made with love ♡ in Margate!</p>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const instructionsSection = document.getElementById('instructionsSection');
+            const sysreqSection = document.getElementById('sysreqSection'); 
 
             function isElementInViewport(el) {
                 const rect = el.getBoundingClientRect();
@@ -387,13 +535,35 @@ LogFilePath = F:\code\visual studio 2022\source\repos\download\download\bin\x64\
             function handleScroll() {
                 if (isElementInViewport(instructionsSection)) {
                     instructionsSection.classList.add('show');
-                    window.removeEventListener('scroll', handleScroll);
+                }
+                if (isElementInViewport(sysreqSection)) {
+                    sysreqSection.classList.add('show');
                 }
             }
 
             handleScroll();
             window.addEventListener('scroll', handleScroll);
+
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
         });
+
+        function copyToClipboard(elementId) {
+            const codeElement = document.getElementById(elementId);
+            let textToCopy = codeElement.innerText;
+            textToCopy = textToCopy.trim();
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const button = codeElement.nextElementSibling;
+                const originalText = button.innerHTML;
+                button.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Copied!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy text. Please copy manually.');
+            });
+        }
     </script>
 </body>
 </html>

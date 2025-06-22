@@ -24,6 +24,8 @@
             --section-bg: #222;
             --code-bg: #333;
             --code-color: #f8f8f2;
+            --footer-bg: #222; /* Even darker for the footer */
+            --footer-text: #aaa;
         }
 
         body {
@@ -44,7 +46,7 @@
             width: 90%;
             margin: 0 auto;
             padding: 40px 0; /* More top/bottom padding for content */
-            flex-grow: 1;
+            flex-grow: 1; /* Allows main content to take up available space, pushing footer down */
         }
 
         h1 {
@@ -187,6 +189,9 @@
             .nav-icon { /* Adjusted for responsive Material Symbol */
                 font-size: 24px; /* Slightly smaller on smaller screens */
             }
+            footer {
+                padding: 15px;
+            }
         }
 
         .code {
@@ -194,8 +199,8 @@
         }
         
         /* The .instructions-section related styles are not directly used in this HTML for packages.html,
-           but keeping them here for consistency with the main site's CSS if they share a stylesheet.
-           If this is a separate CSS file, these can be removed.
+            but keeping them here for consistency with the main site's CSS if they share a stylesheet.
+            If this is a separate CSS file, these can be removed.
         */
         .instructions-section ul li code {
             background-color: var(--code-bg);
@@ -222,6 +227,70 @@
             margin-top: 15px;
             margin-bottom: 25px;
         }
+
+        /* Search Bar Styling */
+        .search-container {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .search-container input[type="text"] {
+            padding: 12px 15px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--section-bg);
+            border-radius: 5px;
+            background-color: var(--placeholder-bg);
+            color: var(--text-color);
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .search-container input[type="text"]::placeholder {
+            font-family: 'Poppins', sans-serif;
+            color: var(--placeholder-text);
+        }
+
+        .search-container input[type="text"]:focus {
+            font-family: 'Poppins', sans-serif;
+            border-color: var(--link-color);
+            box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.3); /* Blue glow on focus */
+            outline: none;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 20px;
+            width: 100%; /* Make sure it's 100% width */
+            margin-top: 50px; /* Space above the footer */
+            text-align: center;
+            font-size: 0.9em;
+            border-top: 1px solid #333; /* A subtle separator */
+            box-sizing: border-box; /* Ensure padding is included in width */
+        }
+
+        footer p {
+            margin: 5px 0;
+            line-height: 1.5;
+            font-size: 0.95em; /* Slightly larger than overall footer font for readability */
+        }
+
+        footer a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -231,11 +300,19 @@
                 home
             </span>
         </a>
+
         <a href="packages.html" class="github-button">
-            <span class="material-symbols-outlined";">
+            <span class="material-symbols-outlined">
                 package
             </span>
-    </a>
+        </a>
+
+        <a href="contact.html" class="github-button">
+            <span class="material-symbols-outlined">
+                sms
+                </span>
+        </a>
+
         <a href="https://github.com/trisiegt" class="github-button">
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub Logo">
             GitHub
@@ -246,7 +323,11 @@
         <h1>Available Official Packages</h1>
         <p>Explore the list of official packages available through <code class="code">download.exe</code> under the <code class="code">com.justtrisie</code> namespace.</p>
 
-        <ul class="package-list">
+        <div class="search-container">
+            <input type="text" id="packageSearch" onkeyup="filterPackages()" placeholder="Search packages...">
+        </div>
+
+        <ul class="package-list" id="packageList">
             <li>
                 <strong>com.justtrisie.schoolTool</strong>
                 <p>a way to access hidden drives and try to run programs unblocked on school computers.</p>
@@ -259,8 +340,43 @@
                 <strong>com.justtrisie.rtedit</strong>
                 <p>(NOT AVALIABLE YET) a basic, lightweight rich text editor, similar to microsoft wordpad (write.exe)</p>
             </li>
-        </ul>
+            </ul>
 
     </div>
+
+    <footer>
+        <p>&copy; 2025-<span id="currentYear"></span> justTrisie. All rights reserved.</p>
+        <p>Find me on GitHub: <a href="https://github.com/trisiegt" target="_blank">trisiegt</a></p>
+        <p>Made with love ♡ in Margate!</p>
+    </footer>
+
+
+    <script>
+        function filterPackages() {
+            const input = document.getElementById('packageSearch');
+            const filter = input.value.toLowerCase();
+            const ul = document.getElementById('packageList');
+            const li = ul.getElementsByTagName('li');
+
+            for (let i = 0; i < li.length; i++) {
+                const strong = li[i].getElementsByTagName('strong')[0];
+                const p = li[i].getElementsByTagName('p')[0];
+                
+                if (strong || p) {
+                    const textValue = (strong ? strong.textContent : '') + ' ' + (p ? p.textContent : '');
+                    if (textValue.toLowerCase().indexOf(filter) > -1) {
+                        li[i].style.display = "";
+                    } else {
+                        li[i].style.display = "none";
+                    }
+                }       
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer for packages page
+            document.getElementById('currentYearPackages').textContent = new Date().getFullYear();
+        });
+    </script>
 </body>
 </html>
