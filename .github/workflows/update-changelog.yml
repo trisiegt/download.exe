@@ -1,0 +1,48 @@
+name: update download.exe changelog
+
+on:
+  push:
+    branches:
+      - main # or your primary branch like master/dev
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # needed to get all history if you want more than just the latest commit
+
+    - name: set up git user
+      run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+
+    - name: get latest commits
+      id: changelog
+      run: |
+        # Get the last 5 commits (adjust as needed)
+        # Using jq to format output into an array of objects
+        CHANGELOG_ENTRIES=$(git log -n 5 --pretty=format:'{ "commitHash": "%h", "author": "%an", "timestamp": "%aI", "commitMessage": "%B" }' | jq -s '.')
+        echo "CHANGELOG_JSON=$CHANGELOG_ENTRIES" >> $GITHUB_OUTPUT
+
+    - name: update changelog.json
+      run: |
+        # Read existing changelog.json
+        EXISTING_CHANGELOG=$(cat changelog.json)
+
+        # Merge new entries with existing, ensuring no duplicates based on commitHash
+        # This is a basic merge, you might want more sophisticated deduplication
+        MERGED_CHANGELOG=$(echo "$CHANGELOG_ENTRIES" "$EXISTING_CHANGELOG" | jq -s '.[0] + .[1] | unique_by(.commitHash) | sort_by(.timestamp) | reverse')
+
+        echo "$MERGED_CHANGELOG" > changelog.json
+
+    - name: commit changelog changes
+      run: |
+        git add changelog.json
+        git diff --cached --exit-code || git commit -m "docs: update changelog.json"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
